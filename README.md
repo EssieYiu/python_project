@@ -50,7 +50,7 @@ Table4 选手提交文件字段，其中user_id,coupon_id和date_received均来�
 |Probability|15天内用劵概率，由参赛选手给出|
 
 ### 需要处理的数据
-1.缺失值处理
+1. 缺失值处理
 - 可能出现NULL的字段是Coupon_id,Discount_rate,Distance,Date_received,Date
 - Distance字段为NULL意思应该是没有收集到这个数据，可能需要我们进行填充（当作预测值处理）或者直接把这个条目弃掉
 - Coupon字段为NULL是无优惠劵消费，此时Discount_rate和Date_received无意义
@@ -59,10 +59,10 @@ Table4 选手提交文件字段，其中user_id,coupon_id和date_received均来�
 - *按照题目的表述，似乎是不会出现Coupon为NULL且Date为NULL的字段？（既没有领优惠券，也没有进行消费。但数据很多，不一定能够确定，处理的时候可能需要稍微注意一下）*
 
 ## 特征
-1.和Discount_rate相关的
+1. 和Discount_rate相关的
 折扣率（Discount_rate),满（Discount_man),减（Discount_jian),类型（Discount_type)
-2.工作日/周末（日期）
-3.（待补充，可能会有很多）
+2. 工作日/周末（日期）
+3. (待补充，可能会有很多）
 
 ## 模型
 
