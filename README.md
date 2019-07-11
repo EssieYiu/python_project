@@ -68,5 +68,6 @@ Table4 选手提交文件字段，其中user_id,coupon_id和date_received均来�
 
 ## 其他说明
 - readin.py读入三个原始文件，可以看到文件的概览信息
-
+- [100行代码链接](https://tianchi.aliyun.com/course/courseConsole?spm=5176.12282070.0.0.e6c02042YHb4OP&courseId=263&chapterIndex=1&sectionIndex=1)
+- [感觉很厉害的链接](https://tianchi.aliyun.com/notebook-ai/detail?spm=5176.12586969.1002.3.29281b48a8MasP&postId=58107)
 ## 遇到的困难（及解决方案）
