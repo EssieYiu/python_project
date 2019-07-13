@@ -62,7 +62,8 @@ Table4 选手提交文件字段，其中user_id,coupon_id和date_received均来�
 1. 和Discount_rate相关的
 折扣率（Discount_rate),满（Discount_man),减（Discount_jian),类型（Discount_type)
 2. 工作日/周末（日期）
-3. (待补充，可能会有很多）
+3. 距离
+4. 用户
 
 ## 模型
 
@@ -71,3 +72,4 @@ Table4 选手提交文件字段，其中user_id,coupon_id和date_received均来�
 - [100行代码链接](https://tianchi.aliyun.com/course/courseConsole?spm=5176.12282070.0.0.e6c02042YHb4OP&courseId=263&chapterIndex=1&sectionIndex=1)
 - [感觉很厉害的链接](https://tianchi.aliyun.com/notebook-ai/detail?spm=5176.12586969.1002.3.29281b48a8MasP&postId=58107)
 ## 遇到的困难（及解决方案）
+1. nan不能使用等号比较，要使用isnan函数。在选取DataFrame的元素的时候，又不能对series直接调用函数之类，因此，先将原来的NAN值填为-1，因此得以判断原位置是否NAN
