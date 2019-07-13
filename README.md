@@ -69,7 +69,23 @@ Table4 选手提交文件字段，其中user_id,coupon_id和date_received均来�
 
 ## 其他说明
 - readin.py读入三个原始文件，可以看到文件的概览信息
+一些比较有用的参考链接(大家找到什么有用的资料链接都可以放在这里共享)
 - [100行代码链接](https://tianchi.aliyun.com/course/courseConsole?spm=5176.12282070.0.0.e6c02042YHb4OP&courseId=263&chapterIndex=1&sectionIndex=1)
 - [感觉很厉害的链接](https://tianchi.aliyun.com/notebook-ai/detail?spm=5176.12586969.1002.3.29281b48a8MasP&postId=58107)
+- [season one 第一名github链接](https://github.com/wepe/O2O-Coupon-Usage-Forecast/tree/master/code/wepon/season%20one)
+- [pandas基础](https://tianchi.aliyun.com/notebook-ai/detail?spm=5176.12282042.0.0.4a732042WRDDrk&postId=6068)
+- [Groupby函数用法](https://blog.csdn.net/qq_24753293/article/details/78338263)
+- [Groupby&agg](https://segmentfault.com/a/1190000012394176)
+- 第一名所提取的特征如下，可以参考
+    - other feature column =['user_id','coupon_id','date_received','this_month_user_receive_all_coupon_count','this_month_user_receive_same_coupon_count','receive_number','max_date_receive','min_date_receive','this_month_user_receive_same_coupon_lastone','this_month_user_receive_same_coupon_firstone','date_receive_date','day_gap_before','day_gap_after'],在dataset1，2，3中获取
+    - coupon column =['user_id','merchant_id','discount_rate','distance','receive_date','day_of_week','day_of_month','days_distance','discount_man','discount_jian','is_man_jian','coupon_id','coupon_count'],在dataset1,2,3中获取
+    - merchant column=['merchant_id,'coupon_id','distance','date_recieved','date','total_sales','sales_use_coupon','total_coupon','merchant_min_distance','merchant_max_distance','merchant_mean_distance','merchant_median_distance','coupon_rate']在feature1,2,3中获取
+    - user column =['user_id','merchant_id','count_merchant','distance','user_max_distance','user_min_distance','user_mean_distance','user_median_distance','buy_user_coupon','buy_total','coupon_received','user_date_datereceived_gap','gap_avg','gap_min','gap_max']在feature1,2,3中获取
+    - user-merchant column =['user_id','merchant_id','user_merchant_buy_total','user_merchant_received','user_merchant_buy_use_coupon','user_merchant_any','user_merchant_buy_common','user_merchant_coupon_transfer_rate','user_merchant_coupon_buy_rate','user_merchant_rate','user_merchant_common_buy_rate']
+    在feature1,2,3中获取
+    - 将上述的特征分别整合进dataset1，2，3中，除dataset3没有label列以外，其他的都和另两个相同
+    - label:dataset1,2有label,dataset3没有，指示的是正、零、负样本
+    - label作为y，其他特征作为x，进行训练，预测dataset3的label值
+
 ## 遇到的困难（及解决方案）
 1. nan不能使用等号比较，要使用isnan函数。在选取DataFrame的元素的时候，又不能对series直接调用函数之类，因此，先将原来的NAN值填为-1，因此得以判断原位置是否NAN
