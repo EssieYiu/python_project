@@ -82,6 +82,9 @@ Table4 选手提交文件字段，其中user_id,coupon_id和date_received均来�
 - [pandas基础](https://tianchi.aliyun.com/notebook-ai/detail?spm=5176.12282042.0.0.4a732042WRDDrk&postId=6068)
 - [Groupby函数用法](https://blog.csdn.net/qq_24753293/article/details/78338263)
 - [Groupby&agg](https://segmentfault.com/a/1190000012394176)
+- [CSDN上的一个系统性总结思路](https://blog.csdn.net/orsonV/article/details/83509414)
+- [模型选择和特征选择的基本方法](https://www.cnblogs.com/learninglife/p/9340636.html)
+
 - 第一名所提取的特征如下，可以参考
     - other feature column =['user_id','coupon_id','date_received','this_month_user_receive_all_coupon_count','this_month_user_receive_same_coupon_count','receive_number','max_date_receive','min_date_receive','this_month_user_receive_same_coupon_lastone','this_month_user_receive_same_coupon_firstone','date_receive_date','day_gap_before','day_gap_after'],在dataset1，2，3中获取
     - coupon column =['user_id','merchant_id','discount_rate','distance','receive_date','day_of_week','day_of_month','days_distance','discount_man','discount_jian','is_man_jian','coupon_id','coupon_count'],在dataset1,2,3中获取
