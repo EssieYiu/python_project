@@ -1,4 +1,3 @@
-
 import pandas as pd
 import numpy as np
 import datetime
@@ -22,7 +21,7 @@ def convert_rate(row):
         return 1 - float(rows[1])/float(rows[0])
     else:
         return float(row)
-dfoff['Discount_rate'].apply(convert_rate)
+dfoff['Discount_rate'] = dfoff['Discount_rate'].apply(convert_rate)
 #处理null
 dfoff['Distance'].fillna(11,inplace = True)
 dfoff.fillna(-1,inplace=True)
@@ -49,40 +48,46 @@ Output: DataFrame
 def get_user_feature(feature):
     user = feature[['User_id','Merchant_id','Coupon_id','Discount_rate','Distance','Date_received','Date']]
     t = user[['User_id']]
-    t.drop_duplicates(inplace = True)
+    t = t.drop_duplicates()
 
     #用户领取优惠券核销次数
-    t1 = user[('Coupon_id'!=-1)&('Date'!=-1)][['User_id']]
+    t1 = user[(user.Coupon_id != -1)&(user.Date != -1)][['User_id']]
     t1['user_coupon_use'] = 1
     t1 = t1.groupby('User_id').agg('sum').reset_index()
+    print(t1.head(10))
 
     #用户领取优惠券总数,merge后再计算优惠券核销率
-    t2 = user['Date_received'!=-1][['User_id']]
+    t2 = user[user.Date_received != -1][['User_id']]
     t2['coupon_total'] = 1
-    t2.groupby('User_id').agg('sum').reset_index()
+    t2 = t2.groupby('User_id').agg('sum').reset_index()
+    print(t2.head(10))
 
     #用户核销优惠券的平均消费折率
-    t3 = user[('Coupon_id'!=-1)&('Date'!=-1)][['User_id','Discount_rate']]
+    t3 = user[(user.Coupon_id != -1)&(user.Date != -1)][['User_id','Discount_rate']]
     t3 = t3.groupby('User_id').agg('mean').reset_index()
     t3.rename(columns={'Discount_rate':'user_avg_discount_rate'},inplace=True)
+    print(t3.head(10))
 
     #用户核销优惠券的最小消费折率
-    t4 = user[('Coupon_id'!=-1)&('Date'!=-1)][['User_id','Discount_rate']]
+    t4 = user[(user.Coupon_id != -1)&(user.Date != -1)][['User_id','Discount_rate']]
     t4 = t4.groupby('User_id').agg('min').reset_index()
     t4.rename(columns={'Discount_rate':'user_min_discount_rate'},inplace=True)
+    print(t4.head(10))
 
     #用户核销优惠券的最大消费折率
-    t5 = user[('Coupon_id'!=-1)&('Date'!=-1)][['User_id','Discount_rate']]
+    t5 = user[(user.Coupon_id !=-1)&(user.Date !=-1)][['User_id','Discount_rate']]
     t5 = t5.groupby('User_id').agg('max').reset_index()
     t5.rename(columns={'Discount_rate':'user_max_discount_rate'},inplace=True)
+    print(t5.head(10))
 
     #用户平均核销每个商家多少张优惠券：用户核销优惠券总数/商家总数
     #这里计算用户对应的商家总数，后面用user_coupon_use除
     t6 = user[['User_id','Merchant_id']]
-    t6.drop_duplicates()
+    t6 = t6.drop_duplicates()
     t6['Merchant_id'] = 1
     t6 = t6.groupby('User_id').agg('sum').reset_index()
     t6.rename(columns={'Merchant_id':'merchant_count'},inplace=True)
+    print(t6.head(10))
 
     user_feature = pd.merge(t,t1,on='User_id',how = 'left')
     user_feature = pd.merge(user_feature,t2,on='User_id',how='left')
@@ -118,55 +123,55 @@ merchant feature
 def get_merchant_feature(feature):
     merchant = feature[['Merchant_id','Coupon_id','Discount_rate','Distance','Date_received','Date']]
 
-    t = merchant['Merchant_id']
-    t.drop_duplicates()
+    t = merchant[['Merchant_id']]
+    t = t.drop_duplicates()
 
     #merchant coupon total get by user:coupon_out
-    t1 = merchant[('Coupon_id'!=-1)][['Merchant_id']]
+    t1 = merchant[(merchant.Coupon_id !=-1)][['Merchant_id']]
     t1['coupon_out'] = 1
     t1 = t1.groupby('Merchant_id').agg('sum').reset_index()
 
     #merchant coupon total use by user:coupon_used
-    t2 = merchant[('Coupon_id'!=-1)&('Date'!=-1)]['Merchant_id']
+    t2 = merchant[(merchant.Coupon_id !=-1)&(merchant.Date !=-1)][['Merchant_id']]
     t2['coupon_used'] = 1
     t2 = t2.groupby('Merchant_id').agg('sum').reset_index()
 
     #merchant_coupon_avg_discount_rate
-    t3 = merchant[('Coupon_id'!=-1)&('Date'!=-1)][['Merchant_id','Discount_rate']]
+    t3 = merchant[(merchant.Coupon_id !=-1)&(merchant.Date !=-1)][['Merchant_id','Discount_rate']]
     t3 = t3.groupby('Merchant_id').agg('mean').reset_index()
     t3.rename(columns={'Discount_rate':'merchant_coupon_avg_discount_rate'},inplace=True)
 
     #merchant_coupon_min_discount_rate
-    t4 = merchant[('Coupon_id'!=-1)&('Date'!=-1)][['Merchant_id','Discount_rate']]
+    t4 = merchant[(merchant.Coupon_id !=-1)&(merchant.Date !=-1)][['Merchant_id','Discount_rate']]
     t4 = t4.groupby('Merchant_id').agg('min').reset_index()
     t4.rename(columns={'Discount_rate':'merchant_coupon_min_discount_rate'},inplace=True)
 
     #merchant_coupon_max_discount_rate
-    t5 = merchant[('Coupon_id'!=-1)&('Date'!=-1)][['Merchant_id','Discount_rate']]
+    t5 = merchant[(merchant.Coupon_id !=-1)&(merchant.Date !=-1)][['Merchant_id','Discount_rate']]
     t5 = t5.groupby('Merchant_id').agg('max').reset_index()
     t5.rename(columns={'Discount_rate':'merchant_coupon_max_discount_rate'},inplace=True)   
 
     #merchant kinds of coupon:coupon_kinds
-    t6 = merchant[('Coupon_id'!=-1)][['Merchant_id','Discount_rate']]
-    t6.drop_duplicates()
+    t6 = merchant[(merchant.Coupon_id !=-1)][['Merchant_id','Discount_rate']]
+    t6 = t6.drop_duplicates()
     t6['Discount_rate'] = 1
     t6 = t6.groupby('Merchant_id').agg('sum').reset_index()
     t6.rename(columns={'Discount_rate':'coupon_kinds'},inplace=True)
 
     #merchant_user_avg_distance
-    t7 = merchant[('Coupon_id'!=-1)&('Date'!=-1)][['Merchant_id','Distance']]
+    t7 = merchant[(merchant.Coupon_id !=-1)&(merchant.Date !=-1)][['Merchant_id','Distance']]
     t7 = t7.groupby('Merchant_id').agg('mean').reset_index()
-    t7.rename(columns={'Distance':'merchant_user_avg_distance',inplace = True})
+    t7.rename(columns={'Distance':'merchant_user_avg_distance'},inplace = True)
 
     #merchant_user_min_distance
-    t8 = merchant[('Coupon_id'!=-1)&('Date'!=-1)][['Merchant_id','Distance']]
+    t8 = merchant[(merchant.Coupon_id !=-1)&(merchant.Date !=-1)][['Merchant_id','Distance']]
     t8 = t8.groupby('Merchant_id').agg('min').reset_index()
-    t8.rename(columns={'Distance':'merchant_user_min_distance',inplace = True})
+    t8.rename(columns={'Distance':'merchant_user_min_distance'},inplace = True)
 
     #merchnat_user_max_distance
-    t9 = merchant[('Coupon_id'!=-1)&('Date'!=-1)][['Merchant_id','Distance']]
+    t9 = merchant[(merchant.Coupon_id !=-1)&(merchant.Date !=-1)][['Merchant_id','Distance']]
     t9 = t9.groupby('Merchant_id').agg('max').reset_index()
-    t9.rename(columns={'Distance':'merchant_user_max_distance',inplace = True})
+    t9.rename(columns={'Distance':'merchant_user_max_distance'},inplace = True)
 
     merchant_feature = pd.merge(t,t1,on='Merchant_id',how='left')
     merchant_feature = pd.merge(merchant_feature,t2,on='Merchant_id',how='left')
