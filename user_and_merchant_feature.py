@@ -54,31 +54,26 @@ def get_user_feature(feature):
     t1 = user[(user.Coupon_id != -1)&(user.Date != -1)][['User_id']]
     t1['user_coupon_use'] = 1
     t1 = t1.groupby('User_id').agg('sum').reset_index()
-    print(t1.head(10))
 
     #用户领取优惠券总数,merge后再计算优惠券核销率
     t2 = user[user.Date_received != -1][['User_id']]
     t2['coupon_total'] = 1
     t2 = t2.groupby('User_id').agg('sum').reset_index()
-    print(t2.head(10))
 
     #用户核销优惠券的平均消费折率
     t3 = user[(user.Coupon_id != -1)&(user.Date != -1)][['User_id','Discount_rate']]
     t3 = t3.groupby('User_id').agg('mean').reset_index()
     t3.rename(columns={'Discount_rate':'user_avg_discount_rate'},inplace=True)
-    print(t3.head(10))
 
     #用户核销优惠券的最小消费折率
     t4 = user[(user.Coupon_id != -1)&(user.Date != -1)][['User_id','Discount_rate']]
     t4 = t4.groupby('User_id').agg('min').reset_index()
     t4.rename(columns={'Discount_rate':'user_min_discount_rate'},inplace=True)
-    print(t4.head(10))
 
     #用户核销优惠券的最大消费折率
     t5 = user[(user.Coupon_id !=-1)&(user.Date !=-1)][['User_id','Discount_rate']]
     t5 = t5.groupby('User_id').agg('max').reset_index()
     t5.rename(columns={'Discount_rate':'user_max_discount_rate'},inplace=True)
-    print(t5.head(10))
 
     #用户平均核销每个商家多少张优惠券：用户核销优惠券总数/商家总数
     #这里计算用户对应的商家总数，后面用user_coupon_use除
@@ -87,7 +82,6 @@ def get_user_feature(feature):
     t6['Merchant_id'] = 1
     t6 = t6.groupby('User_id').agg('sum').reset_index()
     t6.rename(columns={'Merchant_id':'merchant_count'},inplace=True)
-    print(t6.head(10))
 
     user_feature = pd.merge(t,t1,on='User_id',how = 'left')
     user_feature = pd.merge(user_feature,t2,on='User_id',how='left')
@@ -95,10 +89,11 @@ def get_user_feature(feature):
     user_feature = pd.merge(user_feature,t4,on='User_id',how='left')
     user_feature = pd.merge(user_feature,t5,on='User_id',how='left')
     user_feature = pd.merge(user_feature,t6,on='User_id',how='left')
-    user_feature.user_coupon_use.replace(np.nan,0)
-    user_feature.merchant_count.replace(np.nan,0)
+    user_feature.user_coupon_use = user_feature.user_coupon_use.replace(np.nan,0)
+    user_feature.merchant_count = user_feature.merchant_count.replace(np.nan,0)
     user_feature['user_coupon_use_rate'] = user_feature.user_coupon_use.astype('float')/user_feature.coupon_total.astype('float')
     user_feature['user_avg_coupon_per_merchant'] = user_feature.user_coupon_use.astype('float')/user_feature.merchant_count.astype('float')
+    user_feature.coupon_total = user_feature.coupon_total.replace(np.nan,0)
     return user_feature
 
 
@@ -108,6 +103,7 @@ user_feature2 = get_user_feature(feature2)
 user_feature2.to_csv('user_feature2.csv',index='None')
 user_feature3 = get_user_feature(feature3)
 user_feature3.to_csv('user_feature3.csv',index='None')
+
 
 '''
 merchant feature
@@ -182,6 +178,9 @@ def get_merchant_feature(feature):
     merchant_feature = pd.merge(merchant_feature,t7,on='Merchant_id',how='left')
     merchant_feature = pd.merge(merchant_feature,t8,on='Merchant_id',how='left')
     merchant_feature = pd.merge(merchant_feature,t9,on='Merchant_id',how='left')
+    merchant_feature.coupon_used = merchant_feature.coupon_used.replace(np.nan,0)
+    merchant_feature.coupon_out = merchant_feature.coupon_out.replace(np.nan,0)
+    merchant_feature.coupon_kinds = merchant_feature.coupon_kinds.replace(np.nan,0)
     merchant_feature['merchant_coupon_used_rate'] = merchant_feature.coupon_used.astype('float')/merchant_feature.coupon_out.astype('float')
     merchant_feature['merchant_per_kind_coupon_used'] = merchant_feature.coupon_used.astype('float')/merchant_feature.coupon_kinds.astype('float')
     return merchant_feature
