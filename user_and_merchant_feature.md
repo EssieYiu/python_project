@@ -9,7 +9,7 @@
 - 用户平均核销每个商家多少张优惠券 user_avg_coupon_per_merchant
 
 ## 商家特征
-- 商家优惠券被领取后核销率 merchant_coupon_used
+- 商家优惠券被领取后核销率 merchant_coupon_used_rate
 - 商家优惠券被核销的平均消费折率 merchant_coupon_avg_discount_rate
 - 商家优惠券被核销的最小消费折率 merchant_coupon_min_discount_rate
 - 商家优惠券被核销的最大消费折率 merchant_coupon_max_discount_rate
