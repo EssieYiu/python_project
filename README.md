@@ -62,14 +62,16 @@ Table4 选手提交文件字段，其中user_id,coupon_id和date_received均来�
 1. 用户
 - 用户领取优惠劵核销次数 user_coupon_use
 - 用户领取优惠券总数 coupon_total
-
 - 用户领取优惠券后进行核销率 user_coupon_use_rate
 - 用户核销优惠券的平均消费折率 user_avg_discount_rate
 - 用户核销优惠券的最低消费折率 user_min_discount_rate
 - 用户核销优惠券的最高消费折率 user_max_discount_rate
 - 用户在多少个商家处使用优惠券消费过 merchant_count
 - 用户平均核销每个商家多少张优惠券 user_avg_coupon_per_merchant
-在feature1，2，3中提取特征，分别写在user_feature1.csv,user_feature2.csv,user_feature3.csv中
+
+    在feature1，2，3中提取特征，分别写在user_feature1.csv,user_feature2.csv,user_feature3.csv中
+
+
 2. 商户
 - 商家被领取优惠券数 coupon_out
 - 商家被领取优惠券后被消费数 coupon_used
@@ -82,7 +84,8 @@ Table4 选手提交文件字段，其中user_id,coupon_id和date_received均来�
 - 商家被核销优惠券中的平均用户-商家距离 merchant_user_avg_distance
 - 商家被核销优惠券中的最小用户-商家距离 merchant_user_min_distance
 - 商家被核销优惠券中的最大用户-商家距离 merchant_user_max_distance
-在feature1，2，3中提取特征，分别写在merchant_feature1.csv,merchant_feature2.csv,merchant_feature3.csv中
+
+    在feature1，2，3中提取特征，分别写在merchant_feature1.csv,merchant_feature2.csv,merchant_feature3.csv中
 
 **说明：运行user_and_merchant_feature.py,即可得到用户和商户特征文件各三份**
 
