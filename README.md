@@ -79,6 +79,7 @@ Table4 选手提交文件字段，其中user_id,coupon_id和date_received均来�
 - [100行代码链接](https://tianchi.aliyun.com/course/courseConsole?spm=5176.12282070.0.0.e6c02042YHb4OP&courseId=263&chapterIndex=1&sectionIndex=1)
 - [感觉很厉害的链接](https://tianchi.aliyun.com/notebook-ai/detail?spm=5176.12586969.1002.3.29281b48a8MasP&postId=58107)
 - [season one 第一名github链接](https://github.com/wepe/O2O-Coupon-Usage-Forecast/tree/master/code/wepon/season%20one)
+- [season one 第一名 代码解读（1）（可通过该页面找到（1）之后的）](https://blog.csdn.net/fahail/article/details/75917689#comments)
 - [pandas基础](https://tianchi.aliyun.com/notebook-ai/detail?spm=5176.12282042.0.0.4a732042WRDDrk&postId=6068)
 - [Groupby函数用法](https://blog.csdn.net/qq_24753293/article/details/78338263)
 - [Groupby&agg](https://segmentfault.com/a/1190000012394176)
