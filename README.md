@@ -124,3 +124,5 @@ Table4 选手提交文件字段，其中user_id,coupon_id和date_received均来�
 ## 遇到的困难（及解决方案）
 1. nan不能使用等号比较，要使用isnan函数。在选取DataFrame的元素的时候，又不能对series直接调用函数之类，因此，先将原来的NAN值填为-1，因此得以判断原位置是否NAN
 2. distance为null的字段如何处理？目前填成了11,有没有更好的处理办法？比如填成平均数或者众数？
+3. a = int(value) 报错：ValueError: invalid literal for int() with base 10 不能强制转换不是纯数字的字符串
+   解决办法：a= int(float(value)) 先转换成浮点数，再转换成整数
