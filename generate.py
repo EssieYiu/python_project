@@ -18,11 +18,12 @@ def get_label(s):
 
 # Merge data
 def merge_data(file1, file2, file3, file4, file5):
-    coupon = pd.read_csv(file1)
-    merchant = pd.read_csv(file2)
-    user = pd.read_csv(file3)
-    user_merchant = pd.read_csv(file4)
-    other_feature = pd.read_csv(file5)
+    coupon = pd.read_csv(file1,index_col=0,header=0)
+    merchant = pd.read_csv(file2,index_col=0,header=0)
+    user = pd.read_csv(file3,index_col=0,header=0)
+    user_merchant = pd.read_csv(file4,index_col=0,header=0)
+    other_feature = pd.read_csv(file5,index_col=0,header=0)
+    
     dataset = pd.merge(user,user_merchant,on='User_id',how='left')
     dataset = pd.merge(dataset,merchant,on='Merchant_id',how='left')
     dataset = pd.merge(dataset,coupon,on='User_id',how='left')
