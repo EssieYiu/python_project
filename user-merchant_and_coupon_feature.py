@@ -126,7 +126,7 @@ Output: DataFrame
 
 
 def get_user_merchant_feature(feature):
-    user_merchant = feature[['User_id', 'Merchant_id']]
+    user_merchant = feature[['User_id', 'Merchant_id','Date']]
     user_merchant.drop_duplicates(inplace=True)
 
     t1 = feature[['User_id', 'Merchant_id', 'Coupon_id']]
@@ -135,7 +135,7 @@ def get_user_merchant_feature(feature):
     t1 = t1.groupby(['User_id', 'Merchant_id']).agg('sum').reset_index()
     t1.drop_duplicates(inplace=True)
 
-    t2 = feature3[['User_id', 'Merchant_id', 'Date', 'Date_received']]
+    t2 = feature[['User_id', 'Merchant_id', 'Date', 'Date_received']]
     t2 = t2[(t2.Date != 'null') & (t2.Date_received != 'null')][['User_id', 'Merchant_id']]
     t2['user_merchant_buy_use_coupon'] = 1
     t2 = t2.groupby(['User_id', 'Merchant_id']).agg('sum').reset_index()
