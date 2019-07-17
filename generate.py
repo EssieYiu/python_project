@@ -23,18 +23,18 @@ def merge_data(file1, file2, file3, file4, file5):
     user = pd.read_csv(file3,index_col=0,header=0)
     user_merchant = pd.read_csv(file4,index_col=0,header=0)
     other_feature = pd.read_csv(file5,index_col=0,header=0)
-    
+    '''
     dataset = pd.merge(user,user_merchant,on='User_id',how='left')
     dataset = pd.merge(dataset,merchant,on='Merchant_id',how='left')
-    dataset = pd.merge(dataset,coupon,on='User_id',how='left')
-    dataset = pd.merge(dataset,other_feature,on=['User_id','Coupon_id'],how='left')
+    dataset = pd.merge(dataset,coupon,on=['User_id','Merchant_id'],how='left')
+    dataset = pd.merge(dataset,other_feature,on=['User_id','Coupon_id','Date_received'],how='left')
 
     '''
     dataset = pd.merge(coupon,merchant,on='Merchant_id',how='left')
     dataset = pd.merge(dataset,user,on='User_id',how='left')
     dataset = pd.merge(dataset,user_merchant,on=['User_id','Merchant_id'],how='left')
     dataset = pd.merge(dataset,other_feature,on=['User_id','Coupon_id','Date_received'],how='left')
-    '''
+    
     dataset.drop_duplicates(inplace=True)
     #print(dataset.shape)
     return dataset

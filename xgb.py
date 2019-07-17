@@ -8,9 +8,9 @@ def get_processed_dataset():
     #dataset1: 训练集1
     #dataset2: 训练集2
     #dataset3: 测试集
-    dataset1 = pd.read_csv('DataSet1.csv')
-    dataset2 = pd.read_csv('DataSet2.csv')
-    dataset3 = pd.read_csv('DataSet3.csv')
+    dataset1 = pd.read_csv('dataset1.csv')
+    dataset2 = pd.read_csv('dataset2.csv')
+    dataset3 = pd.read_csv('dataset3.csv')
 
     # 删除重复项
     dataset1.drop_duplicates(inplace=True)
@@ -25,10 +25,10 @@ def get_processed_dataset():
     dataset12.fillna(0, inplace=True)
     dataset3.fillna(0, inplace=True)
 
-    return dataset12, dataset3
+    return dataset1, dataset2,dataset3,dataset12
 
 
-def train_xgb(dataset12, dataset3):
+def train_xgb(dataset1,dataset2, dataset3,dataset12):
     # dataset1_y, dataset2_y, dataset12_y赋值为dataset1, dataset2, dataset12_y的label列
     dataset1_y = dataset1.label
     dataset2_y = dataset2.label
@@ -43,8 +43,9 @@ def train_xgb(dataset12, dataset3):
     dataset3_x = dataset3.drop(columns = ['user_id', 'coupon_id', 'date_received', 'day_gap_before', 'day_gap_after'], axis=1)
 
     #加载数据到xgboost
-    # dataset1 = xgb.DMatrix(dataset1_x, label=dataset1_y)
-    # dataset2 = xgb.DMatrix(dataset2_x, label=dataset2_y)
+
+    dataset1 = xgb.DMatrix(dataset1_x, label=dataset1_y)
+    dataset2 = xgb.DMatrix(dataset2_x, label=dataset2_y)
     dataset12 = xgb.DMatrix(dataset12_x, label=dataset12_y)
     dataset3 = xgb.DMatrix(dataset3_x)
 
@@ -66,6 +67,9 @@ def train_xgb(dataset12, dataset3):
               }
 
     # 训练模型
+
+
+
     watchlist = [(dataset12, 'train')]
     model = xgb.train(params, dataset12, num_boost_round = 3500, evals = watchlist)
 
@@ -92,3 +96,7 @@ def train_xgb(dataset12, dataset3):
     #将结果保存在当前工作路径下
     dataset3_preds.to_csv("xgb_preds.csv", index = None, header = None)
     # print(dataset3_preds.describe()) #打印dataset3_preds
+
+
+dataset1,dataset2,dataset3,dataset12 = get_processed_dataset()
+train_xgb(dataset1,dataset2,dataset3,dataset12)

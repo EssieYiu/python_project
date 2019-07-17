@@ -75,7 +75,7 @@ def is_man_jian(s):
 
 def get_coupon_feature(feature):
     coupon = feature[['User_id','Merchant_id', 'Coupon_id', 'Discount_rate', 'Distance', 'Date_received', 'Date']]
-    t = coupon[['User_id','Coupon_id']]
+    t = coupon[['User_id','Merchant_id','Coupon_id','Date_received']]
     t = t.drop_duplicates()
 
     #discount_rate 优惠券折率
@@ -130,13 +130,13 @@ def get_user_merchant_feature(feature):
     user_merchant.drop_duplicates(inplace=True)
 
     t1 = feature[['User_id', 'Merchant_id', 'Coupon_id']]
-    t1 = t1[t1.Coupon_id != 'null'][['User_id', 'Merchant_id']]
+    t1 = t1[t1.Coupon_id != -1][['User_id', 'Merchant_id']]
     t1['user_merchant_received'] = 1
     t1 = t1.groupby(['User_id', 'Merchant_id']).agg('sum').reset_index()
     t1.drop_duplicates(inplace=True)
 
     t2 = feature[['User_id', 'Merchant_id', 'Date', 'Date_received']]
-    t2 = t2[(t2.Date != 'null') & (t2.Date_received != 'null')][['User_id', 'Merchant_id']]
+    t2 = t2[(t2.Date != -1) & (t2.Date_received != -1)][['User_id', 'Merchant_id']]
     t2['user_merchant_buy_use_coupon'] = 1
     t2 = t2.groupby(['User_id', 'Merchant_id']).agg('sum').reset_index()
     t2.drop_duplicates(inplace=True)
@@ -147,7 +147,7 @@ def get_user_merchant_feature(feature):
 
     user_merchant['user_merchant_coupon_transfer_rate'] = user_merchant.user_merchant_buy_use_coupon.astype(
         'float') / user_merchant.user_merchant_received.astype('float')
-
+    user_merchant.fillna(0,inplace=True)
     return user_merchant
 
 
