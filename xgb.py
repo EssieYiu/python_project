@@ -12,6 +12,9 @@ def get_processed_dataset():
     dataset2 = pd.read_csv('dataset2.csv')
     dataset3 = pd.read_csv('dataset3.csv')
 
+    dataset1['Label'].replace(-1,0,inplace=True)
+    dataset2['Label'].replace(-1,0,inplace=True)
+
     # 删除重复项
     dataset1.drop_duplicates(inplace=True)
     dataset2.drop_duplicates(inplace=True)
@@ -29,18 +32,18 @@ def get_processed_dataset():
 
 
 def train_xgb(dataset1,dataset2, dataset3,dataset12):
-    # dataset1_y, dataset2_y, dataset12_y赋值为dataset1, dataset2, dataset12_y的label列
-    dataset1_y = dataset1.label
-    dataset2_y = dataset2.label
-    dataset12_y = dataset12.label
-    # 删除dataset1, dataset2, dataset12的’user_id’, ’label’, ’day_gap_before’, ’day_gap_after’字段，赋值给dataset1_x, dataset2_x, dataset12_x
-    dataset1_x = dataset1.drop(columns = ['user_id', 'label', 'day_gap_before', 'day_gap_after'], axis=1)
-    dataset2_x = dataset2.drop(columns = ['user_id', 'label', 'day_gap_before', 'day_gap_after'], axis=1)
-    dataset12_x = dataset12.drop(columns = ['user_id', 'label', 'day_gap_before', 'day_gap_after'], axis=1)
-    # 复制dataset3的'user_id', 'coupon_id', 'date_received'这三列，拷贝给dataset3_preds
-    dataset3_preds = dataset3[['user_id', 'coupon_id', 'date_received']].copy()
-    # 删除dataset3的'user_id', 'coupon_id', 'date_received', 'day_gap_before', 'day_gap_after'，赋值给dataset3_x
-    dataset3_x = dataset3.drop(columns = ['user_id', 'coupon_id', 'date_received', 'day_gap_before', 'day_gap_after'], axis=1)
+    # dataset1_y, dataset2_y, dataset12_y赋值为dataset1, dataset2, dataset12_y的Label列
+    dataset1_y = dataset1.Label
+    dataset2_y = dataset2.Label
+    dataset12_y = dataset12.Label
+    # 删除dataset1, dataset2, dataset12的’User_id’, ’Label’, ’day_gap_before’, ’day_gap_after’字段，赋值给dataset1_x, dataset2_x, dataset12_x
+    dataset1_x = dataset1.drop(columns = ['User_id', 'Label', 'day_gap_before', 'day_gap_after'], axis=1)
+    dataset2_x = dataset2.drop(columns = ['User_id', 'Label', 'day_gap_before', 'day_gap_after'], axis=1)
+    dataset12_x = dataset12.drop(columns = ['User_id', 'Label', 'day_gap_before', 'day_gap_after'], axis=1)
+    # 复制dataset3的'User_id', 'Coupon_id', 'Date_received'这三列，拷贝给dataset3_preds
+    dataset3_preds = dataset3[['User_id', 'Coupon_id', 'Date_received']].copy()
+    # 删除dataset3的'User_id', 'Coupon_id', 'Date_received', 'day_gap_before', 'day_gap_after'，赋值给dataset3_x
+    dataset3_x = dataset3.drop(columns = ['User_id', 'Coupon_id', 'Date_received', 'day_gap_before', 'day_gap_after'], axis=1)
 
     #加载数据到xgboost
 
@@ -87,12 +90,12 @@ def train_xgb(dataset1,dataset2, dataset3,dataset12):
 
 
     # 使用上述模型预测测试集
-    dataset3_preds['label'] = model.predict(dataset3)
+    dataset3_preds['Label'] = model.predict(dataset3)
     # 标签归一化（Sklearn的MinMaxScaler，最简单的归一化）
-    dataset3_preds.label = MinMaxScaler(copy = True, feature_range = (0, 1)).fit_transform(dataset3_preds.label.reshape(-1, 1))
+    dataset3_preds.Label = MinMaxScaler(copy = True, feature_range = (0, 1)).fit_transform(dataset3_preds.Label.reshape(-1, 1))
     # 对数据进行排序，用到了sort_values，by参数可以指定根据哪一列数据进行排序，
     # ascending是设置升序和降序（选择多列或者多行排序要加[ ]，把选择的行列转换为列表，排序方式也可以同样的操作）
-    dataset3_preds.sort_values(by = ['coupon_id', 'label'], inplace = True)
+    dataset3_preds.sort_values(by = ['Coupon_id', 'Label'], inplace = True)
     #将结果保存在当前工作路径下
     dataset3_preds.to_csv("xgb_preds.csv", index = None, header = None)
     # print(dataset3_preds.describe()) #打印dataset3_preds

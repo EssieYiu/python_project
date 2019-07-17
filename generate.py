@@ -9,13 +9,14 @@ def get_label(s):
     if s[0][0]=='-':
         print("null return0")
         return 0
-    elif len(s) < 16:
+    elif s[1][0] =='-':
+        print("return-1")
         return -1
-    elif (date(int(float(s[0][0:4])),int(float(s[0][4:6])),int(float(s[0][6:8])))-date(int(float(s[1][0:4])),int(float(s[1][4:6])),int(float(s[1][6:8])))).days<=15:
+    elif (date(int(s[0][0:4]),int(s[0][4:6]),int(s[0][6:8]))-date(int(s[1][0:4]),int(s[1][4:6]),int(s[1][6:8]))).days<=15:
+        print("positive sample")
         return 1
     else:
         return -1
-
 # Merge data
 def merge_data(file1, file2, file3, file4, file5):
     coupon = pd.read_csv(file1,index_col=0,header=0)
