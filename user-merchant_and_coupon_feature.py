@@ -104,12 +104,12 @@ def get_coupon_feature(feature):
     return coupon_feature
 
 
-user_feature1 = get_coupon_feature(feature1)
-user_feature1.to_csv('coupon_feature1.csv',index='None')
-user_feature2 = get_coupon_feature(feature2)
-user_feature2.to_csv('coupon_feature2.csv',index='None')
-user_feature3 = get_coupon_feature(feature3)
-user_feature3.to_csv('coupon_feature3.csv',index='None')
+coupon_feature1 = get_coupon_feature(feature1)
+coupon_feature1.to_csv('coupon_feature1.csv',index='None')
+coupon_feature2 = get_coupon_feature(feature2)
+coupon_feature2.to_csv('coupon_feature2.csv',index='None')
+coupon_feature3 = get_coupon_feature(feature3)
+coupon_feature3.to_csv('coupon_feature3.csv',index='None')
 
 
 '''

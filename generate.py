@@ -18,7 +18,7 @@ def get_label(s):
     else:
         return -1
 # Merge data
-def merge_data(file1, file2, file3, file4, file5):
+def merge_data(file1, file2, file3, file4, file5,is_train):
     coupon = pd.read_csv(file1,index_col=0,header=0)
     merchant = pd.read_csv(file2,index_col=0,header=0)
     user = pd.read_csv(file3,index_col=0,header=0)
@@ -34,7 +34,10 @@ def merge_data(file1, file2, file3, file4, file5):
     dataset = pd.merge(coupon,merchant,on='Merchant_id',how='left')
     dataset = pd.merge(dataset,user,on='User_id',how='left')
     dataset = pd.merge(dataset,user_merchant,on=['User_id','Merchant_id'],how='left')
-    dataset = pd.merge(dataset,other_feature,on=['User_id','Coupon_id','Date_received'],how='left')
+    if is_train:
+        dataset = pd.merge(dataset,other_feature,on=['User_id','Coupon_id','Date_received'],how='left')
+    else:
+        dataset = pd.merge(dataset,other_feature,on=['User_id','Coupon_id','Date_received'],how='right')
     
     dataset.drop_duplicates(inplace=True)
     #print(dataset.shape)
@@ -52,9 +55,9 @@ def data_process(dataset, is_train):
     dataset = dataset.fillna(-1)
     return dataset
 
-dataset1 = merge_data('coupon_feature1.csv','merchant_feature1.csv','user_feature1.csv','user_merchant_feature1.csv','other_feature1.csv')
-dataset2 = merge_data('coupon_feature2.csv','merchant_feature2.csv','user_feature2.csv','user_merchant_feature2.csv','other_feature2.csv')
-dataset3 = merge_data('coupon_feature3.csv','merchant_feature3.csv','user_feature3.csv','user_merchant_feature3.csv','other_feature3.csv')
+dataset1 = merge_data('coupon_feature1.csv','merchant_feature1.csv','user_feature1.csv','user_merchant_feature1.csv','other_feature1.csv',1)
+dataset2 = merge_data('coupon_feature2.csv','merchant_feature2.csv','user_feature2.csv','user_merchant_feature2.csv','other_feature2.csv',1)
+dataset3 = merge_data('coupon_feature3.csv','merchant_feature3.csv','user_feature3.csv','user_merchant_feature3.csv','other_feature3.csv',0)
 #dataset1.to_csv('dtmp1.csv',index=None)
 
 dataset1 = data_process(dataset1,True)

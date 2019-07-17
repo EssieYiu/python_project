@@ -126,3 +126,5 @@ Table4 选手提交文件字段，其中user_id,coupon_id和date_received均来�
 2. distance为null的字段如何处理？目前填成了11,有没有更好的处理办法？比如填成平均数或者众数？
 3. a = int(value) 报错：ValueError: invalid literal for int() with base 10 不能强制转换不是纯数字的字符串
    解决办法：a= int(float(value)) 先转换成浮点数，再转换成整数
+4. AttributeError: 'Series' object has no attribute 'reshape'.解决：加.values之后再reshape
+5. 跑出来的结果没有7月预测数据，可能是merge出问题了，修改了一下merge的方法。测试集how为right，这样保留下来的就全是7月份的了。而训练集仍为left，尽可能得到更多的样本数据。

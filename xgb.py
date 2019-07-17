@@ -20,8 +20,18 @@ def get_processed_dataset():
     dataset2.drop_duplicates(inplace=True)
     dataset3.drop_duplicates(inplace=True)
 
+
     #将dataset1和dataset2连起来
     dataset12 = pd.concat([dataset1, dataset2], axis=0)
+
+    print("dataset1 info")
+    print(dataset1.info())
+    print("dataset2 info")
+    print(dataset2.info())
+    print("dataset3 info")
+    print(dataset3.info())
+    print("dataset12 info")
+    print(dataset12.info())
 
     #如果碰到空值就转换成0
     #--------------------------------这一步不知道需不需要
@@ -43,7 +53,7 @@ def train_xgb(dataset1,dataset2, dataset3,dataset12):
     # 复制dataset3的'User_id', 'Coupon_id', 'Date_received'这三列，拷贝给dataset3_preds
     dataset3_preds = dataset3[['User_id', 'Coupon_id', 'Date_received']].copy()
     # 删除dataset3的'User_id', 'Coupon_id', 'Date_received', 'day_gap_before', 'day_gap_after'，赋值给dataset3_x
-    dataset3_x = dataset3.drop(columns = ['User_id', 'Coupon_id', 'Date_received', 'day_gap_before', 'day_gap_after'], axis=1)
+    dataset3_x = dataset3.drop(columns = ['User_id', 'Coupon_id', 'Date_received', 'day_gap_before', 'day_gap_after','Date'], axis=1)
 
     #加载数据到xgboost
 
@@ -74,7 +84,7 @@ def train_xgb(dataset1,dataset2, dataset3,dataset12):
 
 
     watchlist = [(dataset12, 'train')]
-    model = xgb.train(params, dataset12, num_boost_round = 3500, evals = watchlist)
+    model = xgb.train(params, dataset12, num_boost_round = 100, evals = watchlist)
 
     # 第一名的num_boost_round是直接设定为3500，下面这种计算了最优的num_boost_round
     # # 使用xgb.cv优化num_boost_round参数
@@ -88,11 +98,11 @@ def train_xgb(dataset1,dataset2, dataset3,dataset12):
     # watchlist = [(dataset12, 'train')]
     # model = xgb.train(params, dataset12, num_boost_round=num_round_best, evals=watchlist)
 
-
+    print("begin to predict")
     # 使用上述模型预测测试集
     dataset3_preds['Label'] = model.predict(dataset3)
     # 标签归一化（Sklearn的MinMaxScaler，最简单的归一化）
-    dataset3_preds.Label = MinMaxScaler(copy = True, feature_range = (0, 1)).fit_transform(dataset3_preds.Label.reshape(-1, 1))
+    dataset3_preds.Label = MinMaxScaler(copy = True, feature_range = (0, 1)).fit_transform(dataset3_preds.Label.values.reshape(-1, 1))
     # 对数据进行排序，用到了sort_values，by参数可以指定根据哪一列数据进行排序，
     # ascending是设置升序和降序（选择多列或者多行排序要加[ ]，把选择的行列转换为列表，排序方式也可以同样的操作）
     dataset3_preds.sort_values(by = ['Coupon_id', 'Label'], inplace = True)
