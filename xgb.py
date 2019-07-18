@@ -53,7 +53,7 @@ def train_xgb(dataset1,dataset2, dataset3,dataset12):
     # 复制dataset3的'User_id', 'Coupon_id', 'Date_received'这三列，拷贝给dataset3_preds
     dataset3_preds = dataset3[['User_id', 'Coupon_id', 'Date_received']].copy()
     # 删除dataset3的'User_id', 'Coupon_id', 'Date_received', 'day_gap_before', 'day_gap_after'，赋值给dataset3_x
-    dataset3_x = dataset3.drop(columns = ['User_id', 'Coupon_id', 'Date_received', 'day_gap_before', 'day_gap_after','Date'], axis=1)
+    dataset3_x = dataset3.drop(columns = ['User_id', 'Coupon_id', 'Date_received', 'day_gap_before', 'day_gap_after'], axis=1)
 
     #加载数据到xgboost
 
@@ -84,7 +84,7 @@ def train_xgb(dataset1,dataset2, dataset3,dataset12):
 
 
     watchlist = [(dataset12, 'train')]
-    model = xgb.train(params, dataset12, num_boost_round = 100, evals = watchlist)
+    model = xgb.train(params, dataset12, num_boost_round = 3500, evals = watchlist)
 
     # 第一名的num_boost_round是直接设定为3500，下面这种计算了最优的num_boost_round
     # # 使用xgb.cv优化num_boost_round参数

@@ -73,7 +73,8 @@ def is_man_jian(s):
         return 1
 
 
-def get_coupon_feature(feature):
+def get_coupon_feature(dataset):
+    '''
     coupon = feature[['User_id','Merchant_id', 'Coupon_id', 'Discount_rate', 'Distance', 'Date_received', 'Date']]
     t = coupon[['User_id','Merchant_id','Coupon_id','Date_received']]
     t = t.drop_duplicates()
@@ -102,13 +103,22 @@ def get_coupon_feature(feature):
     coupon_feature['use_coupon_rate'] = coupon_feature.coupon_use.astype('float') / coupon_feature.coupon_total.astype('float')
 
     return coupon_feature
+    '''
+    dataset['discount_man'] = dataset.Discount_rate.apply(get_discount_man)
+    dataset['discount_jian'] = dataset.Discount_rate.apply(get_discount_jian)
+    dataset['is_man_jian'] = dataset.Discount_rate.apply(is_man_jian)
+    dataset['discount_rate'] = dataset.Discount_rate.apply(calc_discount_rate)
+    d = dataset[['Coupon_id']]
+    d['coupon_count'] = 1
+    d = d.groupby('Coupon_id').agg('sum').reset_index()
+    dataset = pd.merge(dataset,d,on='Coupon_id',how='left')
+    return dataset
 
-
-coupon_feature1 = get_coupon_feature(feature1)
+coupon_feature1 = get_coupon_feature(dataset1)
 coupon_feature1.to_csv('coupon_feature1.csv',index='None')
-coupon_feature2 = get_coupon_feature(feature2)
+coupon_feature2 = get_coupon_feature(dataset2)
 coupon_feature2.to_csv('coupon_feature2.csv',index='None')
-coupon_feature3 = get_coupon_feature(feature3)
+coupon_feature3 = get_coupon_feature(dataset3)
 coupon_feature3.to_csv('coupon_feature3.csv',index='None')
 
 
@@ -126,7 +136,7 @@ Output: DataFrame
 
 
 def get_user_merchant_feature(feature):
-    user_merchant = feature[['User_id', 'Merchant_id','Date']]
+    user_merchant = feature[['User_id', 'Merchant_id']]
     user_merchant.drop_duplicates(inplace=True)
 
     t1 = feature[['User_id', 'Merchant_id', 'Coupon_id']]
