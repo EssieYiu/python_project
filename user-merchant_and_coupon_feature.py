@@ -14,6 +14,7 @@ print(dfoff.info())
 
 #处理null
 dfoff['Distance'].fillna(11,inplace = True)
+dfoff['Discount_rate'].fillna(1,inplace=True)
 dfoff.fillna(-1,inplace=True)
 
 dataset3 = data_test
@@ -122,17 +123,7 @@ coupon_feature3 = get_coupon_feature(dataset3)
 coupon_feature3.to_csv('coupon_feature3.csv',index='None')
 
 
-'''
-coupon related: 
-      discount_rate 优惠券折率
-      manjian_min_cost 满减优惠券的最低消费
-      discount_type 优惠券类型(0-直接折扣，1-满减)
-      coupon_use 历史上该优惠券核销量
-      coupon_total 历史上该优惠券领取总量
-      use_coupon_rate 历史上用户对该优惠券的核销率
-Input: feature
-Output: DataFrame
-'''
+
 
 
 def get_user_merchant_feature(feature):
